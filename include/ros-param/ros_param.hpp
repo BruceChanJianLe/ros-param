@@ -7,6 +7,8 @@
 #include <xmlrpcpp/XmlRpc.h>
 
 #include <string>
+#include <map>
+#include <vector>
 
 
 namespace ros_param
@@ -16,6 +18,45 @@ namespace ros_param
     private:
         ros::NodeHandle private_nh_;
         ros::NodeHandle global_nh_;
+
+        // Local variables
+        bool bool_var_;
+        int int_var_;
+        double double_var_;
+        std::string string_var_;
+        std::map<std::string, std::string> dict_var_;
+
+        // List variables
+        std::vector<double> list_of_double_;
+        std::vector<std::vector<double>> list_of_list_of_double_;
+
+        // Another list variable
+        std::vector<double> another_list_of_double_;
+        std::vector<std::vector<double>> another_list_of_list_of_double_;
+
+        // List of dictionary
+        std::vector<std::map<std::string, std::string>> list_of_dict_;
+
+        bool paramSearch(
+            ros::NodeHandle &,
+            const std::string,
+            std::string &
+        );
+
+        template <typename T>
+        bool paramLoad(
+            ros::NodeHandle &,
+            std::string &,
+            T & local_var
+        );
+
+
+        template <typename T>
+        bool singleParamLoad(
+            ros::NodeHandle &,
+            const std::string,
+            T & local_var
+        );
 
     public:
         loader();
