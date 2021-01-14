@@ -21,3 +21,9 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS}
 )
+
+add_executable(ros_param_node
+  src/ros_param_node.cpp
+  src/ros_param.cpp
+)
+target_link_libraries(ros_param_node ${catkin_LIBRARIES})
