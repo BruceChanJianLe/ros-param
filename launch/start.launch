@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+    <node pkg="ros-param" type="ros_param_node" name="ros_param_node" launch-prefix="bash -c 'sleep 5; $0 $@' "/>
+
+    <rosparam command="load" file="$(find ros-param)/config/params.yaml"/>
+
+</launch>
