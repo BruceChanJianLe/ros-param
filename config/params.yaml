@@ -1,0 +1,30 @@
+main_namespace:
+  sub_namespace:
+    bool_var: true
+    int_var: 10
+    double_var: 8.0
+    string_var: "this is a string variable."
+    dict_var: {name: map_name, type: "map_type"}
+
+    # List variables
+    list_of_double: [1.0, 2.0, 3.0, 4.0, 5.0]
+    list_of_list_of_double: [[1.0, 2.0], [2.0, 3.0], [3.0, 4.0], [4.0, 5.0]]
+
+    # Another way to define list
+    another_list_of_double:
+    - 6.0
+    - 7.0
+    - 8.0
+    - 9.0
+    - 10.0
+
+    another_list_of_list_of_double:
+    - [6.0, 7.0]
+    - [7.0, 8.0]
+    - [8.0, 9.0]
+    - [9.0, 10.0]
+
+    list_of_dict:
+    - {name: first1, type: second1}
+    - {name: first2, type: second2}
+    - {name: first3, type: second3}
