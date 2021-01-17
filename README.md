@@ -26,7 +26,9 @@ You can either read them back separately, i.e. retrieving /gains/P would return 
 { 'P': 10.0, 'I': 1.0, 'D' : 0.1 }
 ```
 
-CURRENTLY THE EXAMPLE CODE IS NOT READY. WILL BE UPDATED IN A LATER TIME.
+CURRENTLY THE EXAMPLE CODE IS NOT READY. WILL BE UPDATED IN A LATER TIME.  
+- @todo add loading single rosparam  
+- @todo add loading list of rosparam  
 
 ## Reference
 
