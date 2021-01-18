@@ -12,7 +12,12 @@ namespace ros_param
         string_var_("")
     {
         // Initializing all local params from ROS server
-        singleParamLoad(global_nh_, "int_var", int_var_);
+        ROS_INFO_STREAM("global_nh: " << global_nh_.getNamespace() << " private_nh: " << private_nh_.getNamespace());
+        global_nh_.param("main_namespace/sub_namespace/int_var", int_var_, 12);
+        std::string full_path;
+        private_nh_.searchParam("list_of_double", full_path);
+        singleParamLoad(private_nh_, "int_var", int_var_);
+        ROS_INFO_STREAM(ros::this_node::getName() << " int_var: " << int_var_ << " full_path: " << full_path);
     }
 
 
