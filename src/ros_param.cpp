@@ -6,18 +6,25 @@ namespace ros_param
     loader::loader()
     :   private_nh_(ros::NodeHandle("~")),
         global_nh_(ros::NodeHandle()),
+        param_nh_(ros::NodeHandle("main_namespace/sub_namespace")),
         bool_var_(false),
         int_var_(0),
         double_var_(0.0),
         string_var_("")
     {
         // Initializing all local params from ROS server
-        ROS_INFO_STREAM("global_nh: " << global_nh_.getNamespace() << " private_nh: " << private_nh_.getNamespace());
-        global_nh_.param("main_namespace/sub_namespace/int_var", int_var_, 12);
-        std::string full_path;
-        private_nh_.searchParam("list_of_double", full_path);
-        singleParamLoad(private_nh_, "int_var", int_var_);
-        ROS_INFO_STREAM(ros::this_node::getName() << " int_var: " << int_var_ << " full_path: " << full_path);
+
+        // Obstain single param
+        singleParamLoad(param_nh_, "bool_var", bool_var_);
+        singleParamLoad(param_nh_, "int_var", int_var_);
+        singleParamLoad(param_nh_, "double_var", double_var_);
+        singleParamLoad(param_nh_, "string_var", string_var_);
+
+        // Obtain dict
+        std::vector<std::string> dict_name {"name", "type"};
+
+        dictParamLoad(param_nh_, "dict_var", dict_var_);
+
     }
 
 
@@ -28,19 +35,19 @@ namespace ros_param
 
     /**
      * Search is the parameter exist and return the full namespace
-     * @param global_nh reference to global namespace node handle
+     * @param param_nh reference to param namespace node handle
      * @param search_var variable to be searched in the ROS server
      * @param full_path full path of variable if found
      * @return true if successful, false otherwise
      */
     bool loader::paramSearch(
-        ros::NodeHandle & global_nh,
+        ros::NodeHandle & param_nh,
         const std::string search_var,
         std::string & full_path
     )
     {
         bool isok = false;
-        if(global_nh.searchParam(search_var, full_path))
+        if(param_nh.searchParam(search_var, full_path))
         {
             isok = true;
         }
@@ -55,21 +62,21 @@ namespace ros_param
 
     /**
      * Load param to local variable
-     * @param global_nh reference to global namespace node handle
+     * @param param_nh reference to param namespace node handle
      * @param full_path full path to obtain the variable in ROS server
      * @param local_var reference to local variable to be passed to
      * @return true if successful, false otherwise
      */
     template <typename T>
     bool loader::paramLoad(
-        ros::NodeHandle & global_nh,
+        ros::NodeHandle & param_nh,
         std::string & full_path,
         T & local_var
     )
     {
         bool isok = false;
         XmlRpc::XmlRpcValue value;
-        if(global_nh.getParam(full_path, local_var))
+        if(param_nh.getParam(full_path, local_var))
         {
             isok = true;
         }
@@ -82,12 +89,15 @@ namespace ros_param
 
 
     /**
-     * 
-     * 
+     * Load single ros param to local variable
+     * @param param_nh reference to param namespace node handle
+     * @param search_var variable to be searched in the ROS server
+     * @param local_var reference to local variable to be passed to
+     * @return true if successful, false otherwise
      */
     template <typename T>
     bool loader::singleParamLoad(
-            ros::NodeHandle & global_nh,
+            ros::NodeHandle & param_nh,
             const std::string search_var,
             T & local_var
     )
@@ -95,10 +105,10 @@ namespace ros_param
         bool isok = false;
         // Searching for single param
         std::string full_path_tmp;
-        if(paramSearch(global_nh, search_var, full_path_tmp))
+        if(paramSearch(param_nh, search_var, full_path_tmp))
         {
             // Load param to local variable
-            if(paramLoad<T>(global_nh, full_path_tmp, local_var))
+            if(paramLoad<T>(param_nh, full_path_tmp, local_var))
             {
                 isok = true;
                 ROS_INFO_STREAM(ros::this_node::getName() << " successfully loaded " << search_var << ": " << local_var);
@@ -116,6 +126,18 @@ namespace ros_param
             return isok;
         }
         return isok;
+    }
+
+
+    template <typename T1, typename T2>
+    bool loader::dictParamLoad(
+        ros::NodeHandle &,
+        const std::string,
+        const std::vetor<std::string> &
+        std::map<T1, T2>
+    )
+    {
+        ;
     }
 
 
