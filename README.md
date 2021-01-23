@@ -30,6 +30,9 @@ CURRENTLY THE EXAMPLE CODE IS NOT READY. WILL BE UPDATED IN A LATER TIME.
 - @todo add loading single rosparam  
 - @todo add loading list of rosparam  
 
+**Note**  
+It is important to note that if you wish to use `ros::NodeHandle` to search for params in sever, you will need to know the namespace in advance. If not you the `searchParam` will always return false, unlike what it says it does. Therefore, you will notice that there is a `param_nh_` private member to retrieve params from server.
+
 ## Reference
 
 - Good reference from ROS Answer [link](https://answers.ros.org/question/266012/getparam-a-nested-stdmap/)
