@@ -18,6 +18,7 @@ namespace ros_param
     private:
         ros::NodeHandle private_nh_;
         ros::NodeHandle global_nh_;
+        ros::NodeHandle param_nh_;
 
         // Local variables
         bool bool_var_;
@@ -37,6 +38,13 @@ namespace ros_param
         // List of dictionary
         std::vector<std::map<std::string, std::string>> list_of_dict_;
 
+        template <typename T>
+        bool singleParamLoad(
+            ros::NodeHandle &,
+            const std::string,
+            T & local_var
+        );
+
         bool paramSearch(
             ros::NodeHandle &,
             const std::string,
@@ -50,12 +58,12 @@ namespace ros_param
             T & local_var
         );
 
-
-        template <typename T>
-        bool singleParamLoad(
+        template <typename T1, typename T2>
+        bool dictParamLoad(
             ros::NodeHandle &,
             const std::string,
-            T & local_var
+            const std::vector<std::string> &,
+            std::map<T1, T2>
         );
 
     public:
