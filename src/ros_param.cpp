@@ -23,7 +23,7 @@ namespace ros_param
         // Obtain dict
         std::vector<std::string> dict_name {"name", "type"};
 
-        dictParamLoad(param_nh_, "dict_var", dict_name, dict_var_);
+        singleDictParamLoad(param_nh_, "dict_var", dict_name, dict_var_);
 
     }
 
@@ -138,11 +138,11 @@ namespace ros_param
      * @return true if successful, false otherwise
      */
     template <typename T1, typename T2>
-    bool loader::dictParamLoad(
+    bool loader::singleDictParamLoad(
         ros::NodeHandle & param_nh,
         const std::string search_var,
         const std::vector<std::string> & dict_name,
-        std::map<T1, T2>
+        std::map<T1, T2> & local_var
     )
     {
         bool isok = false;
@@ -151,10 +151,14 @@ namespace ros_param
         if(paramSearch(param_nh, search_var, full_path_tmp))
         {
             // Load param to local variable
-            if(paramLoad<T>(param_nh, full_path_tmp, local_var))
+            if(dictParamLoad(param_nh, full_path_tmp, dict_name, local_var))
             {
                 isok = true;
-                ROS_INFO_STREAM(ros::this_node::getName() << " successfully loaded " << search_var << ": " << local_var);
+                ROS_INFO_STREAM(ros::this_node::getName() << " successfully loaded " << search_var);
+                for(auto single_dict_name : dict_name)
+                {
+                    ROS_INFO_STREAM(ros::this_node::getName() << " map with " << single_dict_name << " has " << local_var[single_dict_name]);
+                }
             }
             else
             {
@@ -172,11 +176,33 @@ namespace ros_param
     }
 
 
+    /**
+     * Load single ros param to local variable
+     * @param param_nh reference to param namespace node handle
+     * @param search_var variable to be searched in the ROS server
+     * @param dict_name a vector of string to loop through to obtain the set of dictionary (map)
+     * @param local_var reference to local variable to be passed to
+     * @return true if successful, false otherwise
+     */
+    template <typename T1, typename T2>
     bool loader::dictParamLoad(
-        ,
+        ros::NodeHandle & param_nh,
+        const std::string & full_path,
+        const std::vector<std::string> & dict_name,
+        std::map<T1, T2> & local_var
     )
     {
-        ;
+        bool isok = false;
+        // Obtain list of dict from param server
+        if(param_nh.getParam(full_path, local_var))
+        {
+            isok = true;
+        }
+        else
+        {
+            ROS_ERROR_STREAM(ros::this_node::getName() << " dictParamLoad() unable to obtain map.");
+        }
+        return isok;
     }
 
 
