@@ -54,8 +54,16 @@ namespace ros_param
         template <typename T>
         bool paramLoad(
             ros::NodeHandle &,
-            std::string &,
+            const std::string &,
             T & local_var
+        );
+
+        template <typename T1, typename T2>
+        bool dictParamLoad(
+            ros::NodeHandle &,
+            const std::string,
+            const std::vector<std::string> &,
+            std::map<T1, T2>
         );
 
         template <typename T1, typename T2>
