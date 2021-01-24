@@ -59,19 +59,19 @@ namespace ros_param
         );
 
         template <typename T1, typename T2>
-        bool dictParamLoad(
+        bool singleDictParamLoad(
             ros::NodeHandle &,
             const std::string,
             const std::vector<std::string> &,
-            std::map<T1, T2>
-        );
+            std::map<T1, T2> &
+            );
 
         template <typename T1, typename T2>
         bool dictParamLoad(
             ros::NodeHandle &,
-            const std::string,
+            const std::string &,
             const std::vector<std::string> &,
-            std::map<T1, T2>
+            std::map<T1, T2> &
         );
 
     public:
