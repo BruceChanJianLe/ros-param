@@ -66,6 +66,13 @@ namespace ros_param
             std::map<T1, T2> &
             );
 
+        template <typename T>
+        bool listParamLoad(
+            ros::NodeHandle &,
+            const std::string,
+            std::vector<T> &
+        );
+
     public:
         loader();
         ~loader();
