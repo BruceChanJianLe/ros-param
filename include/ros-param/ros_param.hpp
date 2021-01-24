@@ -70,7 +70,14 @@ namespace ros_param
         bool listParamLoad(
             ros::NodeHandle &,
             const std::string,
-            std::vector<T> &
+            T &
+        );
+
+        template <typename T>
+        bool listOfListParamLoad(
+            ros::NodeHandle &,
+            const std::string,
+            std::vector<std::vector<T>> &
         );
 
     public:

@@ -188,7 +188,7 @@ namespace ros_param
     bool loader::listParamLoad(
         ros::NodeHandle & param_nh,
         const std::string search_var,
-        std::vector<T> & local_var
+        T & local_var
     )
     {
         bool isok = false;
