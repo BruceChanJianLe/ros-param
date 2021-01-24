@@ -149,7 +149,7 @@ namespace ros_param
         if(paramSearch(param_nh, search_var, full_path_tmp))
         {
             // Load param to local variable
-            if(dictParamLoad(param_nh, full_path_tmp, dict_name, local_var))
+            if(paramLoad(param_nh, full_path_tmp, local_var))
             {
                 isok = true;
                 ROS_INFO_STREAM(ros::this_node::getName() << " successfully loaded " << search_var);
@@ -169,36 +169,6 @@ namespace ros_param
         {
             ROS_WARN_STREAM(ros::this_node::getName() << " failed to find " << search_var << " from ROS param server.");
             return isok;
-        }
-        return isok;
-    }
-
-
-    /**
-     * Load single ros param to local variable
-     * @param param_nh reference to param namespace node handle
-     * @param search_var variable to be searched in the ROS server
-     * @param dict_name a vector of string to loop through to obtain the set of dictionary (map)
-     * @param local_var reference to local variable to be passed to
-     * @return true if successful, false otherwise
-     */
-    template <typename T1, typename T2>
-    bool loader::dictParamLoad(
-        ros::NodeHandle & param_nh,
-        const std::string & full_path,
-        const std::vector<std::string> & dict_name,
-        std::map<T1, T2> & local_var
-    )
-    {
-        bool isok = false;
-        // Obtain list of dict from param server
-        if(param_nh.getParam(full_path, local_var))
-        {
-            isok = true;
-        }
-        else
-        {
-            ROS_ERROR_STREAM(ros::this_node::getName() << " dictParamLoad() unable to obtain map.");
         }
         return isok;
     }
