@@ -20,9 +20,12 @@ namespace ros_param
         singleParamLoad(param_nh_, "double_var", double_var_);
         singleParamLoad(param_nh_, "string_var", string_var_);
 
-        // Obtain dict
+        // Obtain dict (singleDictParamLoad is able to printout std::map)
         std::vector<std::string> dict_name {"name", "type"};
         singleDictParamLoad(param_nh_, "dict_var", dict_name, dict_var_);
+
+        // Obtain list of double
+        listParamLoad(param_nh_, "list_of_double", list_of_double_);
 
     }
 
@@ -169,6 +172,47 @@ namespace ros_param
         {
             ROS_WARN_STREAM(ros::this_node::getName() << " failed to find " << search_var << " from ROS param server.");
             return isok;
+        }
+        return isok;
+    }
+
+
+    /**
+     * Loading a list of ROS param
+     * @param param_nh reference to param namespace node handle
+     * @param search_var variable to be searched in the ROS server
+     * @param local_var reference to local variable to be passed to
+     * @return true if successful, false otherwise
+     */
+    template <typename T>
+    bool loader::listParamLoad(
+        ros::NodeHandle & param_nh,
+        const std::string search_var,
+        std::vector<T> & local_var
+    )
+    {
+        bool isok = false;
+        // Variable full path
+        std::string full_path_tmp;
+        if(param_nh.searchParam(search_var, full_path_tmp))
+        {
+            if(param_nh.getParam(full_path_tmp, local_var))
+            {
+                isok = true;
+                ROS_INFO_STREAM(ros::this_node::getName() << " successfully loaded " << search_var);
+                for(auto single_local_var : local_var)
+                {
+                    ROS_INFO_STREAM(ros::this_node::getName() << " vector element: " << single_local_var);
+                }
+            }
+            else
+            {
+                ROS_WARN_STREAM(ros::this_node::getName() << " failed to load " << search_var << " from ROS param server.");
+            }
+        }
+        else
+        {
+            ROS_WARN_STREAM(ros::this_node::getName() << " failed to find " << search_var << " from ROS param server.");
         }
         return isok;
     }
