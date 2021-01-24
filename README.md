@@ -54,6 +54,32 @@ else
 }
 ```
 
+To load a list of ROS param, for example, a vector of double, you may follow the instructions below to load it into your node.
+```cpp
+std::vector<double> local_var
+std::string search_var = "list_of_double";
+std::string full_path_tmp;
+if(param_nh.searchParam(search_var, full_path_tmp))
+{
+    if(param_nh.getParam(full_path_tmp, local_var))
+    {
+        ROS_INFO_STREAM(ros::this_node::getName() << " successfully loaded " << search_var);
+        for(auto single_local_var : local_var)
+        {
+            ROS_INFO_STREAM(ros::this_node::getName() << " vector element: " << single_local_var);
+        }
+    }
+    else
+    {
+        ROS_WARN_STREAM(ros::this_node::getName() << " failed to load " << search_var << " from ROS param server.");
+    }
+}
+else
+{
+    ROS_WARN_STREAM(ros::this_node::getName() << " failed to find " << search_var << " from ROS param server.");
+}
+```
+
 CURRENTLY THE EXAMPLE CODE IS NOT READY. WILL BE UPDATED IN A LATER TIME.  
 - @todo add loading single rosparam  
 - @todo add loading list of rosparam  
