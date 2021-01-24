@@ -22,7 +22,6 @@ namespace ros_param
 
         // Obtain dict
         std::vector<std::string> dict_name {"name", "type"};
-
         singleDictParamLoad(param_nh_, "dict_var", dict_name, dict_var_);
 
     }
@@ -75,7 +74,6 @@ namespace ros_param
     )
     {
         bool isok = false;
-        XmlRpc::XmlRpcValue value;
         if(param_nh.getParam(full_path, local_var))
         {
             isok = true;
