@@ -352,19 +352,16 @@ namespace ros_param
                 {
                     ROS_WARN_STREAM(ros::this_node::getName() << " expected to be TypeArray (fisrt level).");
                 }
-                
             }
             else
             {
                 ROS_WARN_STREAM(ros::this_node::getName() << " failed to load " << search_var << " from ROS param server.");
             }
-            
         }
         else
         {
             ROS_WARN_STREAM(ros::this_node::getName() << " failed to find " << search_var << " from ROS param server.");
         }
-        
     }
 
 
