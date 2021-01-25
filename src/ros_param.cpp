@@ -288,13 +288,11 @@ namespace ros_param
                 {
                     ROS_WARN_STREAM(ros::this_node::getName() << " expected to be TypeArray (first level).");
                 }
-                
             }
             else
             {
                 ROS_WARN_STREAM(ros::this_node::getName() << " failed to load " << search_var << " from ROS param server.");
             }
-            
         }
         else
         {
