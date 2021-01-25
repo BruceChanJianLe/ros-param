@@ -137,10 +137,55 @@ else
 }
 ```
 
-To load a list of dict of ROS param, for example, 
-CURRENTLY THE EXAMPLE CODE IS NOT READY. WILL BE UPDATED IN A LATER TIME.  
-- @todo add loading single rosparam  
-- @todo add loading list of rosparam  
+To load a list of dict of ROS param, for example, a std::map. This is usually something useful for loading in plugins (pluginlib). Please follow the instructions below to load it into your node.
+```cpp
+std::map<std::string, std::string> local_var;
+std::string search_var list_of_dict = "list_of_dict";
+std::string full_path_tmp;
+XmlRpc::XmlRpcValue xmlrpc_value;
+if(param_nh.searchParam(search_var, full_path_tmp))
+{
+    if(param_nh.getParam(full_path_tmp, xmlrpc_value))
+    {
+        // Validate if it is TypeArray
+        if(xmlrpc_value.getType() == XmlRpc::XmlRpcValue::TypeArray)
+        {
+            // Clear local variable
+            local_var.clear();
+            for(int i = 0; i < xmlrpc_value.size(); ++i)
+            {
+                if(xmlrpc_value[i].getType() == XmlRpc::XmlRpcValue::TypeStruct)
+                {
+                    // Insert into local_var
+                    local_var.insert(std::make_pair(xmlrpc_value[i][dict_name.at(0)], xmlrpc_value[i][dict_name.at(1)]));
+                }
+                else
+                {
+                    ROS_WARN_STREAM(ros::this_node::getName() << " expected to be TypeStruct (second level).");
+                }
+            }
+
+            ROS_INFO_STREAM(ros::this_node::getName() << " successfully loaded " << search_var);
+            for(auto itr = local_var.begin(); itr != local_var.end(); ++itr)
+            {
+                ROS_INFO_STREAM(ros::this_node::getName() << " list of map element: key: " << itr->first << ", value: " << itr->second);
+            }
+        }
+        else
+        {
+            ROS_WARN_STREAM(ros::this_node::getName() << " expected to be TypeArray (fisrt level).");
+        }
+    }
+    else
+    {
+        ROS_WARN_STREAM(ros::this_node::getName() << " failed to load " << search_var << " from ROS param server.");
+    }
+}
+else
+{
+    ROS_WARN_STREAM(ros::this_node::getName() << " failed to find " << search_var << " from ROS param server.");
+}
+```
 
 ## Reference
 
