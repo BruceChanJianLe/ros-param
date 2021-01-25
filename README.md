@@ -80,6 +80,64 @@ else
 }
 ```
 
+To load a list of list of ROS param, for example, a vector of vector of double. This is usually something useful for loading in robot footprint in `move_base`. Please follow the instructions below to load it into your node.
+```cpp
+std::vector<std::vector<double>> local_var;
+std::string search_var = "list_of_list_of_double";
+std::string full_path_tmp;
+XmlRpc::XmlRpcValue xmlrpc_value;
+if(param_nh.searchParam(search_var, full_path_tmp))
+{
+    if(param_nh.getParam(full_path_tmp, xmlrpc_value))
+    {
+        // Validate if it is TypeArray
+        if(xmlrpc_value.getType() == XmlRpc::XmlRpcValue::TypeArray)
+        {
+            // Clear vector of vector
+            local_var.clear();
+            for(int i = 0; i < xmlrpc_value.size(); ++i)
+            {
+                if(xmlrpc_value[i].getType() == XmlRpc::XmlRpcValue::TypeArray)
+                {
+                    std::vector<T> vec_tmp;
+                    for(int j = 0; j < xmlrpc_value[i].size(); ++j)
+                    {
+                        vec_tmp.emplace_back((T)xmlrpc_value[i][j]);
+                    }
+                    local_var.emplace_back(vec_tmp);
+                }
+                else
+                {
+                    ROS_WARN_STREAM(ros::this_node::getName() << " expected to be TypeArray (second level).");
+                }
+            }
+            ROS_INFO_STREAM(ros::this_node::getName() << " successfully loaded " << search_var);
+            for(auto vec : local_var)
+            {
+                for(auto element : vec)
+                {
+                    ROS_INFO_STREAM(ros::this_node::getName() << " vector of vector element: " << element);
+                }
+                ROS_INFO_STREAM(ros::this_node::getName() << " NEXT");
+            }
+        }
+        else
+        {
+            ROS_WARN_STREAM(ros::this_node::getName() << " expected to be TypeArray (first level).");
+        }
+    }
+    else
+    {
+        ROS_WARN_STREAM(ros::this_node::getName() << " failed to load " << search_var << " from ROS param server.");
+    }
+}
+else
+{
+    ROS_WARN_STREAM(ros::this_node::getName() << " failed to find " << search_var << " from ROS param sever.");
+}
+```
+
+To load a list of dict of ROS param, for example, 
 CURRENTLY THE EXAMPLE CODE IS NOT READY. WILL BE UPDATED IN A LATER TIME.  
 - @todo add loading single rosparam  
 - @todo add loading list of rosparam  
