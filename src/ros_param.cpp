@@ -14,7 +14,8 @@ namespace ros_param
         list_of_double_({}),
         list_of_list_of_double_({}),
         another_list_of_double_({}),
-        another_list_of_list_of_double_({})
+        another_list_of_list_of_double_({}),
+        list_of_dict_({})
     {
         // Initializing all local params from ROS server
 
@@ -30,10 +31,14 @@ namespace ros_param
 
         // Obtain list of double
         listParamLoad(param_nh_, "list_of_double", list_of_double_);
+        listParamLoad(param_nh_, "another_list_of_double", another_list_of_double_);
 
         // Obtain list of list of double
         listOfListParamLoad(param_nh_, "list_of_list_of_double", list_of_list_of_double_);
+        listOfListParamLoad(param_nh_, "another_list_of_list_of_double", another_list_of_list_of_double_);
 
+        // Obtain list of dict
+        listOfDictParamLoad(param_nh_, "list_of_dict", dict_name, list_of_dict_);
     }
 
 
@@ -296,6 +301,72 @@ namespace ros_param
             ROS_WARN_STREAM(ros::this_node::getName() << " failed to find " << search_var << " from ROS param sever.");
         }
         return isok;
+    }
+
+
+    /**
+     * Loading a list of dict from ROS param (most used for loading plugins)
+     * @param param_nh reference to param namespace node handle
+     * @param search_var variable to be searched in the ROS server
+     * @param local_var reference to local variable to be passed to
+     * @return true if successful, false otherwise
+     */
+    bool loader::listOfDictParamLoad(
+        ros::NodeHandle & param_nh,
+        const std::string search_var,
+        const std::vector<std::string> & dict_name,
+        std::map<std::string, std::string> & local_var
+    )
+    {
+        bool isok = false;
+        std::string full_path_tmp;
+        XmlRpc::XmlRpcValue xmlrpc_value;
+        if(param_nh.searchParam(search_var, full_path_tmp))
+        {
+            if(param_nh.getParam(full_path_tmp, xmlrpc_value))
+            {
+                // Validate if it is TypeArray
+                if(xmlrpc_value.getType() == XmlRpc::XmlRpcValue::TypeArray)
+                {
+                    // Clear local variable
+                    local_var.clear();
+                    for(int i = 0; i < xmlrpc_value.size(); ++i)
+                    {
+                        if(xmlrpc_value[i].getType() == XmlRpc::XmlRpcValue::TypeStruct)
+                        {
+                            // Insert into local_var
+                            local_var.insert(std::make_pair(xmlrpc_value[i][dict_name.at(0)], xmlrpc_value[i][dict_name.at(1)]));
+                        }
+                        else
+                        {
+                            ROS_WARN_STREAM(ros::this_node::getName() << " expected to be TypeStruct (second level).");
+                        }
+                    }
+                    isok = true;
+
+                    ROS_INFO_STREAM(ros::this_node::getName() << " successfully loaded " << search_var);
+                    for(auto itr = local_var.begin(); itr != local_var.end(); ++itr)
+                    {
+                        ROS_INFO_STREAM(ros::this_node::getName() << " list of map element: key: " << itr->first << ", value: " << itr->second);
+                    }
+                }
+                else
+                {
+                    ROS_WARN_STREAM(ros::this_node::getName() << " expected to be TypeArray (fisrt level).");
+                }
+                
+            }
+            else
+            {
+                ROS_WARN_STREAM(ros::this_node::getName() << " failed to load " << search_var << " from ROS param server.");
+            }
+            
+        }
+        else
+        {
+            ROS_WARN_STREAM(ros::this_node::getName() << " failed to find " << search_var << " from ROS param server.");
+        }
+        
     }
 
 
