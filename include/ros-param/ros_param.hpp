@@ -36,7 +36,7 @@ namespace ros_param
         std::vector<std::vector<double>> another_list_of_list_of_double_;
 
         // List of dictionary
-        std::vector<std::map<std::string, std::string>> list_of_dict_;
+        std::map<std::string, std::string> list_of_dict_;
 
         template <typename T>
         bool singleParamLoad(
@@ -78,6 +78,13 @@ namespace ros_param
             ros::NodeHandle &,
             const std::string,
             std::vector<std::vector<T>> &
+        );
+
+        bool listOfDictParamLoad(
+            ros::NodeHandle &,
+            const std::string,
+            const std::vector<std::string> &,
+            std::map<std::string, std::string> &
         );
 
     public:
