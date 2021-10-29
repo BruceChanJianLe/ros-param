@@ -192,3 +192,4 @@ else
 - Good reference from ROS Answer [link](https://answers.ros.org/question/266012/getparam-a-nested-stdmap/)
 - A repository which has method of retrieving param [link](https://github.com/PickNikRobotics/rosparam_shortcuts)
 - ROS wiki list of list [link](https://answers.ros.org/question/318544/retrieve-list-of-lists-from-yaml-file-parameter-server/)
+- Hot examples [link](https://cpp.hotexamples.com/examples/xmlrpc/XmlRpcValue/begin/cpp-xmlrpcvalue-begin-method-examples.html)
